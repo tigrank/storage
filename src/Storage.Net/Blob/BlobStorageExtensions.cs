@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using NetBox.Extensions;
+using Remotion.Linq.Parsing.Structure;
+using Storage.Net.Linq;
 
 namespace Storage.Net.Blob
 {
@@ -217,6 +219,19 @@ namespace Storage.Net.Blob
             await targetStorage.WriteAsync(newId ?? blobId, src, false, cancellationToken);
          }
       }
+
+      #endregion
+
+      #region [ LINQ ]
+
+      public static IEnumerable<BlobId> Query(this IBlobStorage provider)
+      {
+         var parser = QueryParser.CreateDefault();
+         var items = new BlobsQueryable<BlobId>(parser, new BlobsQueryExecutor());
+
+         return items;
+      }
+
 
       #endregion
    }
